@@ -3,7 +3,7 @@ import { Header } from '@/components/layout/Header'
 import { ProductsContainer } from '@/components/products/ProductsContainer'
 
 export const metadata: Metadata = {
-  title: 'Meus Produtos | Itaú',
+  title: 'Meus Produtos',
   description: 'Gerencie seus produtos financeiros: cartões, contas, crédito, investimentos e seguros.',
 }
 

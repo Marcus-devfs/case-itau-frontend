@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { ComingSoonPage} from '@/components/layout/ComingSoonPage'
 
 export const metadata: Metadata = {
-  title: 'Extrato | Itaú',
+  title: 'Extrato',
   description: 'Acompanhe todas as suas movimentações financeiras.',
 }
 

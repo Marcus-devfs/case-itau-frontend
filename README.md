@@ -1,7 +1,8 @@
 # Case Técnico — Itaú · Produtos Financeiros
 
-[![CI](https://github.com/marcussilva/case-itau/actions/workflows/ci.yml/badge.svg)](https://github.com/marcussilva/case-itau/actions/workflows/ci.yml)
-[![Deploy](https://img.shields.io/badge/Vercel-Deploy-black?logo=vercel)](https://case-itau.vercel.app)
+[![CI](https://github.com/Marcus-devfs/case-itau-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/Marcus-devfs/case-itau-frontend/actions/workflows/ci.yml)
+[![Deploy](https://img.shields.io/badge/Vercel-Deploy-black?logo=vercel)](https://case-itau-frontend.vercel.app)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/Marcus-devfs/case-itau-frontend)
 
 Aplicação frontend para área logada de banco digital, desenvolvida como parte do processo seletivo Itaú.
 
@@ -203,7 +204,58 @@ Cores como `text-itau-orange` são resolvidas em build-time para classes atômic
 
 ---
 
-### 5. Quais testes aplicaria para validar a aplicação?
+### 5. Escalabilidade e roadmap técnico
+
+**Caching e performance em crescimento de dados**
+
+Conforme o volume de produtos aumentar ou o padrão de uso evoluir, as seguintes otimizações estão no roadmap:
+
+- **TanStack Query (`@tanstack/react-query`)** — Substituirá o gerenciamento manual de estado de fetch
+  - Deduplicação automática de requisições
+  - Revalidação em background e `staleTime` configurável
+  - Sincronização automática com múltiplas abas/janelas
+  - Retry exponencial e cache inteligente por chave
+  
+Este seria especialmente benéfico quando:
+  - O número de produtos exceder 1000
+  - Necessário implementar infinite scroll ou paginação
+  - Vários usuários acessarem a mesma lista simultânea e frequently
+
+A migração seria estruturada da seguinte forma:
+```ts
+// Antes
+const { products, loading, error } = useProducts(searchQuery)
+
+// Depois com TanStack Query
+const { data: products, isPending, error } = useQuery({
+  queryKey: ['products'],
+  queryFn: fetchProducts,
+  staleTime: 60000,
+})
+```
+
+---
+
+### 6. CI/CD e garantia de qualidade
+
+**GitHub Actions Workflows**
+
+A esteira de CI/CD é automatizada através de GitHub Actions para garantir qualidade em cada entrega:
+
+| Workflow | Gatilho | Validações |
+|---|---|---|
+| `ci.yml` | Push + PR | ESLint, TSC type-check, Jest (100% pass), Build success |
+| `deploy.yml` | Merge em `main` | Deployment automático na Vercel |
+
+Cada pull request é validado antes de merge:
+- ✅ **Linting** — ESLint garante código consistente
+- ✅ **Type Safety** — TypeScript sem warnings
+- ✅ **Tests** — 26 testes unitários com cobertura
+- ✅ **Build** — Vercel preview deploy gerado automaticamente
+
+---
+
+### 7. Quais testes aplicaria para validar a aplicação?
 
 **Testes implementados (26 casos, todos passando)**
 

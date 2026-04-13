@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
 
 export const metadata: Metadata = {
-  title: 'Início | Itaú',
+  title: 'Início',
   description: 'Sua área logada do banco digital Itaú.',
 }
 
