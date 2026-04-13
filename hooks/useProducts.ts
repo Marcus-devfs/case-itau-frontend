@@ -66,12 +66,14 @@ export function useProducts(searchQuery: string = '') {
 
   const filteredProducts = useMemo(() => {
     if (!searchQuery.trim()) return state.products
-    const q = searchQuery.toLowerCase()
+    const removeAccents = (str: string) =>
+      str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    const q = removeAccents(searchQuery)
     return state.products.filter(
       (p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.type.toLowerCase().includes(q) ||
-        p.status.toLowerCase().includes(q)
+        removeAccents(p.name).includes(q) ||
+        removeAccents(p.type).includes(q) ||
+        removeAccents(p.status).includes(q)
     )
   }, [state.products, searchQuery])
 
