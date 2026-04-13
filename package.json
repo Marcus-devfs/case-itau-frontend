@@ -10,7 +10,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "tsx-check": "ts-node --transpile-only --noEmit"
+    "tsx-check": "tsc --noEmit"
   },
   "dependencies": {
     "next": "16.2.3",

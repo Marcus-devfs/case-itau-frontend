@@ -30,7 +30,6 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
 export function ProductDetail({ product, onToggleStatus }: ProductDetailProps) {
   return (
     <div className="flex flex-col gap-6">
-      {/* Hero */}
       <div className="flex items-start gap-4 p-4 bg-zinc-50 rounded-2xl">
         <ProductTypeIcon type={product.type} size="md" />
         <div className="flex-1 min-w-0">
@@ -44,7 +43,6 @@ export function ProductDetail({ product, onToggleStatus }: ProductDetailProps) {
         </div>
       </div>
 
-      {/* Details */}
       <dl className="divide-y divide-zinc-100">
         <DetailRow label="Descrição">
           <span className="text-zinc-600 font-normal leading-relaxed">{product.description}</span>
@@ -70,7 +68,6 @@ export function ProductDetail({ product, onToggleStatus }: ProductDetailProps) {
         </DetailRow>
       </dl>
 
-      {/* Status tip */}
       <p className="text-xs text-zinc-400 text-center">
         {product.status === 'ativo'
           ? 'Desative o produto para suspender temporariamente.'

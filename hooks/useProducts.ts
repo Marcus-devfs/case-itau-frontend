@@ -11,16 +11,11 @@ export function useProducts(searchQuery: string = '') {
     error: null,
   })
 
-  // Counter-based refetch trigger. Incrementing it re-runs the effect.
-  // This avoids calling setState synchronously inside the effect body,
-  // satisfying the react-hooks/set-state-in-effect rule.
   const [fetchTrigger, setFetchTrigger] = useState(0)
 
   useEffect(() => {
     let cancelled = false
 
-    // All setState calls are inside async callbacks — never synchronous
-    // in the effect body itself.
     fetchProducts()
       .then((data) => {
         if (!cancelled) setState({ products: data, loading: false, error: null })
@@ -40,14 +35,12 @@ export function useProducts(searchQuery: string = '') {
   }, [fetchTrigger])
 
   // loadProducts is called from click handlers (e.g. "Tentar novamente"),
-  // never from inside an effect — calling setState here is fine.
   const loadProducts = useCallback(() => {
     setState((prev) => ({ ...prev, loading: true, error: null }))
     setFetchTrigger((n) => n + 1)
   }, [])
 
   const toggleStatus = useCallback(async (productId: string) => {
-    // Optimistic update: flip immediately, revert if the API call fails
     setState((prev) => ({
       ...prev,
       products: prev.products.map((p) =>

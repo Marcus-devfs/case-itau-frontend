@@ -18,7 +18,7 @@ export function ProductsContainer() {
 
   const handleToggleStatus = async (id: string) => {
     await toggleStatus(id)
-    // Keep drawer in sync after toggle
+
     if (selectedProduct?.id === id) {
       setSelectedProduct((prev) =>
         prev ? { ...prev, status: prev.status === 'ativo' ? 'inativo' : 'ativo' } : null

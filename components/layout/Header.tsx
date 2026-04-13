@@ -7,7 +7,6 @@ export function Header({ title, subtitle }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 bg-itau-blue text-white px-5 pt-safe-top">
       <div className="flex items-center justify-between h-14">
-        {/* Logo */}
         <div className="flex items-center gap-2.5">
           <div className="h-8 w-8 rounded-lg bg-itau-orange flex items-center justify-center font-bold text-white text-sm select-none">
             i
@@ -15,7 +14,6 @@ export function Header({ title, subtitle }: HeaderProps) {
           <span className="font-semibold text-sm tracking-tight">Itaú</span>
         </div>
 
-        {/* Avatar */}
         <button
           aria-label="Menu do usuário"
           className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
@@ -37,7 +35,6 @@ export function Header({ title, subtitle }: HeaderProps) {
         </button>
       </div>
 
-      {/* Page title banner */}
       <div className="pb-4 pt-1">
         <h1 className="text-xl font-bold">{title}</h1>
         {subtitle && <p className="text-sm text-white/70 mt-0.5">{subtitle}</p>}

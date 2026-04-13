@@ -18,7 +18,6 @@ export function ComingSoonPage({ title, subtitle, description }: ComingSoonPageP
       <Header title={title} subtitle={subtitle} />
 
       <section className="flex-1 px-4 py-6 pb-24 max-w-2xl w-full mx-auto flex flex-col gap-6">
-        {/* Hero badge */}
         <div className="flex flex-col items-center text-center pt-4 pb-2 gap-3">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-itau-orange/10 text-itau-orange text-xs font-semibold tracking-wide uppercase">
             <span className="h-1.5 w-1.5 rounded-full bg-itau-orange animate-pulse" aria-hidden="true" />
@@ -27,7 +26,6 @@ export function ComingSoonPage({ title, subtitle, description }: ComingSoonPageP
           <p className="text-sm text-zinc-500 max-w-xs leading-relaxed">{description}</p>
         </div>
 
-        {/* Bottom illustration */}
         <div className="flex flex-col items-center gap-3 pt-4">
           <div className="relative">
             <div className="h-20 w-20 rounded-full bg-itau-blue/5 flex items-center justify-center">
