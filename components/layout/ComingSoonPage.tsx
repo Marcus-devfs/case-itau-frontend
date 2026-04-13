@@ -10,10 +10,9 @@ interface ComingSoonPageProps {
   title: string
   subtitle: string
   description: string
-  features?: ComingSoonFeature[]
 }
 
-export function ComingSoonPage({ title, subtitle, description, features }: ComingSoonPageProps) {
+export function ComingSoonPage({ title, subtitle, description }: ComingSoonPageProps) {
   return (
     <main className="flex flex-col min-h-dvh">
       <Header title={title} subtitle={subtitle} />
@@ -27,36 +26,6 @@ export function ComingSoonPage({ title, subtitle, description, features }: Comin
           </span>
           <p className="text-sm text-zinc-500 max-w-xs leading-relaxed">{description}</p>
         </div>
-
-        {/* Feature preview cards */}
-        {features && features.length > 0 && (
-          <div className="flex flex-col gap-3">
-            <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wide px-1">
-              O que vem por aí
-            </p>
-
-            {features.map((feature, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl p-4 border border-zinc-100 flex items-start gap-4 opacity-70"
-                aria-hidden="true"
-              >
-                <div className="h-11 w-11 rounded-xl bg-zinc-100 flex items-center justify-center shrink-0 text-zinc-400">
-                  {feature.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-zinc-600">{feature.title}</p>
-                  <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">{feature.description}</p>
-                </div>
-                <div className="shrink-0 mt-0.5">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-400 text-[10px] font-medium border border-zinc-200">
-                    Breve
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
 
         {/* Bottom illustration */}
         <div className="flex flex-col items-center gap-3 pt-4">

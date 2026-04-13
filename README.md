@@ -21,13 +21,13 @@ O processo seguiu um fluxo de **arquitetura primeiro, implementação depois**:
 
 3. **Geração acelerada de código** — Com a arquitetura e os contratos TypeScript definidos, o Claude Code foi usado para acelerar a implementação de componentes, testes e documentação — tarefas que consomem tempo mas seguem padrões previsíveis.
 
-4. **Revisão e validação manual** — Todo código gerado foi revisado, testado localmente (`npm run dev`, `npm test`, `npm run build`) e ajustado onde necessário. Exemplos de correções feitas: remoção de propriedade inválida no `jest.config.ts`, correção de acessibilidade no `Input.tsx` (`aria-hidden` bloqueava o botão de limpar busca), restauração de funcionalidades removidas por linter automático.
+4. **Revisão e validação manual** — Todo código gerado foi revisado, testado localmente (`npm run dev`, `npm test`, `npm run build`) e ajustado onde necessário.
 
 5. **Testes e documentação** — Os testes unitários foram gerados com Claude Code e validados manualmente para garantir que cobrem os cenários corretos (comportamento do usuário, não implementação interna). O README foi escrito com IA e revisado para refletir fielmente as decisões tomadas.
 
 ### Por que declarar isso?
 
-Transparência é parte da boa engenharia. O uso de ferramentas de IA como **multiplicador de produtividade** — e não como substituto do raciocínio técnico — é uma habilidade cada vez mais valorizada no mercado. A qualidade da saída depende diretamente da qualidade das decisões de quem usa a ferramenta.
+Transparência é parte da boa engenharia. O uso de ferramentas de IA como **multiplicador de produtividade**, e não como substituto do raciocínio técnico, é uma habilidade cada vez mais valorizada no mercado. A qualidade da saída depende diretamente da qualidade das decisões de quem usa a ferramenta.
 
 ---
 

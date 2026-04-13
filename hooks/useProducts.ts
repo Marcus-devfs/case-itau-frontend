@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { Product, ProductStatus, ProductsState } from '@/types/product'
+import { ProductStatus, ProductsState } from '@/types/product'
 import { fetchProducts, toggleProductStatus } from '@/services/products'
 
 export function useProducts(searchQuery: string = '') {
@@ -11,26 +11,43 @@ export function useProducts(searchQuery: string = '') {
     error: null,
   })
 
-  const loadProducts = useCallback(async () => {
-    setState((prev) => ({ ...prev, loading: true, error: null }))
-    try {
-      const data = await fetchProducts()
-      setState({ products: data, loading: false, error: null })
-    } catch {
-      setState((prev) => ({
-        ...prev,
-        loading: false,
-        error: 'Não foi possível carregar os produtos. Tente novamente.',
-      }))
-    }
-  }, [])
+  // Counter-based refetch trigger. Incrementing it re-runs the effect.
+  // This avoids calling setState synchronously inside the effect body,
+  // satisfying the react-hooks/set-state-in-effect rule.
+  const [fetchTrigger, setFetchTrigger] = useState(0)
 
   useEffect(() => {
-    loadProducts()
-  }, [loadProducts])
+    let cancelled = false
+
+    // All setState calls are inside async callbacks — never synchronous
+    // in the effect body itself.
+    fetchProducts()
+      .then((data) => {
+        if (!cancelled) setState({ products: data, loading: false, error: null })
+      })
+      .catch(() => {
+        if (!cancelled)
+          setState((prev) => ({
+            ...prev,
+            loading: false,
+            error: 'Não foi possível carregar os produtos. Tente novamente.',
+          }))
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [fetchTrigger])
+
+  // loadProducts is called from click handlers (e.g. "Tentar novamente"),
+  // never from inside an effect — calling setState here is fine.
+  const loadProducts = useCallback(() => {
+    setState((prev) => ({ ...prev, loading: true, error: null }))
+    setFetchTrigger((n) => n + 1)
+  }, [])
 
   const toggleStatus = useCallback(async (productId: string) => {
-    // Optimistic update
+    // Optimistic update: flip immediately, revert if the API call fails
     setState((prev) => ({
       ...prev,
       products: prev.products.map((p) =>
@@ -43,7 +60,6 @@ export function useProducts(searchQuery: string = '') {
     try {
       await toggleProductStatus(productId)
     } catch {
-      // Revert on error
       setState((prev) => ({
         ...prev,
         products: prev.products.map((p) =>
