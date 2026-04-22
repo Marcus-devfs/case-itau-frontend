@@ -1,88 +1,74 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { ProductStatus, ProductsState } from '@/types/product'
+import { Product, ProductStatus, ProductsState } from '@/types/product'
 import { fetchProducts, toggleProductStatus } from '@/services/products'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+
+
+const PRODUCTS_KEY = 'products' as const
 
 export function useProducts(searchQuery: string = '') {
-  const [state, setState] = useState<ProductsState>({
-    products: [],
-    loading: true,
-    error: null,
+
+  const queryClient = useQueryClient()
+
+  const { data: products = [], isLoading, error, refetch } = useQuery({
+    queryKey: [PRODUCTS_KEY],
+    queryFn: fetchProducts,
+    staleTime: 60 * 1000, // 1 minuto
+    retry: 2
   })
 
-  const [fetchTrigger, setFetchTrigger] = useState(0)
 
-  useEffect(() => {
-    let cancelled = false
+  const { mutate: toggleStatus } = useMutation({
+    mutationFn: ((productId: string) => toggleProductStatus(productId)),
 
-    fetchProducts()
-      .then((data) => {
-        if (!cancelled) setState({ products: data, loading: false, error: null })
-      })
-      .catch(() => {
-        if (!cancelled)
-          setState((prev) => ({
-            ...prev,
-            loading: false,
-            error: 'Não foi possível carregar os produtos. Tente novamente.',
-          }))
-      })
+    onMutate: async (productId) => {
+      await queryClient.cancelQueries({ queryKey: [PRODUCTS_KEY] })
 
-    return () => {
-      cancelled = true
-    }
-  }, [fetchTrigger])
+      const previousProducts = queryClient.getQueryData<Product[]>([PRODUCTS_KEY])
 
-  // loadProducts is called from click handlers (e.g. "Tentar novamente"),
-  const loadProducts = useCallback(() => {
-    setState((prev) => ({ ...prev, loading: true, error: null }))
-    setFetchTrigger((n) => n + 1)
-  }, [])
-
-  const toggleStatus = useCallback(async (productId: string) => {
-    setState((prev) => ({
-      ...prev,
-      products: prev.products.map((p) =>
-        p.id === productId
-          ? { ...p, status: (p.status === 'ativo' ? 'inativo' : 'ativo') as ProductStatus }
-          : p
-      ),
-    }))
-
-    try {
-      await toggleProductStatus(productId)
-    } catch {
-      setState((prev) => ({
-        ...prev,
-        products: prev.products.map((p) =>
+      queryClient.setQueryData<Product[]>([PRODUCTS_KEY], (old) =>
+        old?.map((p) =>
           p.id === productId
             ? { ...p, status: (p.status === 'ativo' ? 'inativo' : 'ativo') as ProductStatus }
             : p
-        ),
-      }))
+        ) || []
+      )
+
+      return { previousProducts }
+    },
+
+    onError: (_err, _productId, context) => {
+      if (context?.previousProducts) {
+        queryClient.setQueryData<Product[]>([PRODUCTS_KEY], context.previousProducts)
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [PRODUCTS_KEY] })
     }
-  }, [])
+  })
 
   const filteredProducts = useMemo(() => {
-    if (!searchQuery.trim()) return state.products
+    if (!searchQuery.trim()) return products
     const removeAccents = (str: string) =>
       str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
     const q = removeAccents(searchQuery)
-    return state.products.filter(
+    return products.filter(
       (p) =>
         removeAccents(p.name).includes(q) ||
         removeAccents(p.type).includes(q) ||
         removeAccents(p.status).includes(q)
     )
-  }, [state.products, searchQuery])
+  }, [products, searchQuery])
 
   return {
     products: filteredProducts,
-    allProducts: state.products,
-    loading: state.loading,
-    error: state.error,
-    loadProducts,
+    allProducts: products,
+    loading: isLoading,
+    error: error ? 'Não foi possível carregar os produtos. Tente novamente.' : null,
+    loadProducts: refetch,
     toggleStatus,
   }
 }

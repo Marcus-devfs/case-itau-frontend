@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { BottomNav } from '@/components/layout/BottomNav'
+import { ReactQueryProvider } from './providers/queryClientProvider'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] })
@@ -37,8 +38,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
       <body className="min-h-full bg-background text-foreground antialiased">
-        {children}
-        <BottomNav />
+        <ReactQueryProvider>
+          {children}
+          <BottomNav />
+        </ReactQueryProvider>
       </body>
     </html>
   )
